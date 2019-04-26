@@ -25,16 +25,39 @@ class TodoApp extends LitElement {
         }
         `;
     }
+    static get properties() {
+        return {
+            lista: { type: Array },
+            listaEntrada: { type: String },
+            valor: { type: String }
+        };
+    }
+
+    constructor() {
+        super();
+        this.listaEntrada = '';
+        this.lista = [];
+    }
 
     render() {
-        return html `
-        <input class="td-input" type="text" placeholder="Introduce Item" >
-        <ul>
-            <li>
-            <todo-element nombreItem="Primer Elemento"></todo-element>
-            </li>
-        </ul>
-        `;
+            return html `
+                <input id="td-input" value="intro" @keypress="${this.entradaItem}" class="td-input" type="text" placeholder="Introduce Item" >
+
+                ${this.lista.length > 0 ? html`
+                <ul >
+                ${ this.lista.map (elemento => html`<li> <todo-element nombreItem=${elemento}></todo-element> </li>`) }
+                </ul>`
+                : null }
+            `;
+    }
+    entradaItem(evnt) {
+        let keycode = evnt.keyCode;
+        if (keycode == 13) {
+            this.listaEntrada = evnt.path[0].value;
+            this.lista.push(this.listaEntrada);
+            evnt.path[0].value = '';
+        }
+
     }
 }
 customElements.define('todo-app', TodoApp);
