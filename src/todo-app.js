@@ -41,12 +41,12 @@ class TodoApp extends LitElement {
 
     render() {
             return html `
-                <input id="td-input" value="intro" @keypress="${this.entradaItem}" class="td-input" type="text" placeholder="Introduce Item" >
+                <input id="td-input"  @keypress="${this.entradaItem}" class="td-input" type="text" placeholder="Introduce Item" >
 
                 ${this.lista.length > 0 ? html`
-                <ul >
-                ${ this.lista.map (elemento => html`<li> <todo-element nombreItem=${elemento}></todo-element> </li>`) }
-                </ul>`
+                    <ul >
+                    ${ this.lista.map (elemento => html`<li> <todo-element activa=${elemento.activa} nombreItem=${elemento.nombre}></todo-element> </li>`) }
+                    </ul>`
                 : null }
             `;
     }
@@ -54,8 +54,10 @@ class TodoApp extends LitElement {
         let keycode = evnt.keyCode;
         if (keycode == 13) {
             this.listaEntrada = evnt.path[0].value;
-            this.lista.push(this.listaEntrada);
+            this.lista.push({nombre : this.listaEntrada, activa: false});
             evnt.path[0].value = '';
+            console.log(this.lista);
+            
         }
 
     }
