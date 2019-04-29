@@ -23,43 +23,93 @@ class TodoApp extends LitElement {
         .td-input::placeholder{
             opacity:0.3;
         }
+        ul{
+            list-style:none;
+            padding:0;
+        }
         `;
     }
     static get properties() {
         return {
             lista: { type: Array },
             listaEntrada: { type: String },
-            valor: { type: String }
+            activa: { type: Boolean },
+            valor: { type: String },
+            newId: { type: Date }
         };
     }
 
     constructor() {
         super();
+        this.activa = false;
         this.listaEntrada = '';
         this.lista = [];
+        this.crearId();
+        this.cargarStorage();
     }
 
     render() {
             return html `
-                <input id="td-input"  @keypress="${this.entradaItem}" class="td-input" type="text" placeholder="Introduce Item" >
+                <input id="td-input" 
+                    @keypress="${this.entradaItem}"
+                    class="td-input" 
+                    type="text"
+                    placeholder="Introduce Item" >
 
                 ${this.lista.length > 0 ? html`
                     <ul >
-                    ${ this.lista.map (elemento => html`<li> <todo-element activa=${elemento.activa} nombreItem=${elemento.nombre}></todo-element> </li>`) }
+                    ${ this.lista.map (elemento => html`
+                        <li>
+                            <todo-element
+                                @inputChecked="${this.cambiarCheked}"
+                                ?activa=${elemento.activa}
+                                newId=${elemento.id}
+                                nombreItem=${elemento.nombre}>
+                            </todo-element>
+                        </li>`
+                        )
+                    }
                     </ul>`
                 : null }
             `;
     }
     entradaItem(evnt) {
         let keycode = evnt.keyCode;
+        
         if (keycode == 13) {
-            this.listaEntrada = evnt.path[0].value;
-            this.lista.push({nombre : this.listaEntrada, activa: false});
-            evnt.path[0].value = '';
-            console.log(this.lista);
-            
+            this.listaEntrada = evnt.target.value;
+            this.agregarLista();
+            evnt.target.value = '';
         }
 
+    }
+    agregarLista(){
+        if (this.listaEntrada.length > 0 ){
+            this.lista.push({nombre : this.listaEntrada, activa: this.activa, id: this.crearId() } ) ;
+        }
+        this.grabarStorage();
+
+    }
+    cambiarCheked(evnt){
+        const valorActiva = this.lista.filter( element => {
+            return element.id  == evnt.target.newId;
+        });
+        valorActiva[0].activa = !valorActiva[0].activa;
+        console.log( valorActiva[0].activa);
+        this.grabarStorage();
+    }
+    crearId(){
+       this.newId = new Date();
+      return this.newId.getTime() ;
+    }
+
+    grabarStorage(){
+        localStorage.setItem('data', JSON.stringify(this.lista));
+    }
+    cargarStorage(){
+        if( localStorage.getItem('data')){
+            this.lista = JSON.parse( localStorage.getItem('data'));
+        }
     }
 }
 customElements.define('todo-app', TodoApp);

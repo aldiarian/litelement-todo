@@ -1,23 +1,42 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html, css } from 'lit-element';
 
 class TodoElement extends LitElement {
 
     static get properties() {
         return {
             nombreItem: { type: String },
-            activa: Boolean
+            activa: { type: Boolean },
+            newId: { type: String }
         };
     }
-
     constructor() {
-        super()
+        super();
         this.nombreItem = 'muestra';
         this.activa = false;
     }
+    static get styles() {
+        return css `
+        :host{
+           font-size:1.5rem;
+        }
+        .td-elemento{
+            cursor: pointer;
+        }
+        `;
+    }
+
     render() {
-        return html `<label>
-            <input type="checkbox" ?checked=${this.activa}> ${this.nombreItem}
-            </label>`;
+        return html `
+        <div class="td-elemento" id="${this.newId}" @click=${this.isCheked}>
+            <todo-check ?activa=${this.activa}></todo-check> <span>${this.nombreItem}</span>
+        </div>
+        `;
+    }
+
+    isCheked() {
+        this.activa = !this.activa;
+        console.log('han hecho click');
+        this.dispatchEvent(new CustomEvent('inputChecked'));
     }
 }
 customElements.define('todo-element', TodoElement);
