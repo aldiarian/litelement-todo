@@ -17,7 +17,8 @@ class TodoElement extends LitElement {
     static get styles() {
         return css `
         :host{
-           font-size:1.5rem;
+           font-size:1rem;
+           font-family: var(--font-primary);
         }
         .td-elemento{
             cursor: pointer;

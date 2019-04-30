@@ -5,7 +5,7 @@ class TodoApp extends LitElement {
         return css `
         :host{
             display:block;
-            width:400px;
+            max-width:400px;
             margin:0 auto;
             box-sizing:border-box;
             padding:1rem;
@@ -35,7 +35,10 @@ class TodoApp extends LitElement {
             listaEntrada: { type: String },
             activa: { type: Boolean },
             valor: { type: String },
-            newId: { type: Date }
+            newId: { type: Date },
+            listAll: { type: Number },
+            listPending: { type: Number },
+            listDone: { type: Number }
         };
     }
 
@@ -46,6 +49,9 @@ class TodoApp extends LitElement {
         this.lista = [];
         this.crearId();
         this.cargarStorage();
+        this.listAll  = this.lista.length,
+        this.listPending = 0,
+        this.listDone = 0
     }
 
     render() {
@@ -71,6 +77,12 @@ class TodoApp extends LitElement {
                     }
                     </ul>`
                 : null }
+
+                <todo-list
+                    listAll=${this.listAll}
+                    listPending=${this.listPending}
+                    listDone=${this.listDone} >
+                </todo-list>
             `;
     }
     entradaItem(evnt) {
@@ -87,6 +99,7 @@ class TodoApp extends LitElement {
         if (this.listaEntrada.length > 0 ){
             this.lista.push({nombre : this.listaEntrada, activa: this.activa, id: this.crearId() } ) ;
         }
+        this.listAll = this.lista.length;
         this.grabarStorage();
 
     }
@@ -95,12 +108,11 @@ class TodoApp extends LitElement {
             return element.id  == evnt.target.newId;
         });
         valorActiva[0].activa = !valorActiva[0].activa;
-        console.log( valorActiva[0].activa);
         this.grabarStorage();
     }
     crearId(){
-       this.newId = new Date();
-      return this.newId.getTime() ;
+        this.newId = new Date();
+        return this.newId.getTime() ;
     }
 
     grabarStorage(){
@@ -109,6 +121,8 @@ class TodoApp extends LitElement {
     cargarStorage(){
         if( localStorage.getItem('data')){
             this.lista = JSON.parse( localStorage.getItem('data'));
+            this.listAll = this.lista.length;
+            console.log(  this.listAll )
         }
     }
 }
