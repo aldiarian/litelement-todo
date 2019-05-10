@@ -20,9 +20,7 @@ class TodoElement extends LitElement {
            font-size:1rem;
            font-family: var(--font-primary);
         }
-        .td-elemento{
-            cursor: pointer;
-        }
+        
         `;
     }
 

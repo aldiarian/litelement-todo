@@ -16,7 +16,7 @@ class TodoList extends LitElement {
         this.listDone = 0
     }
 
-    
+
     static get styles() {
         return css`
         :host{
@@ -26,22 +26,7 @@ class TodoList extends LitElement {
             font-size: 0.7rem;
             margin-top:1rem;
         }
-        .td-listas{
-            background-color: #e2e2e2;
-            text-align:center;
-            padding:0.5rem;
-            border-radius: 3px;
-            width:25%;
-            cursor:pointer;
-        }
-        .td-listas:hover{
-            background-color: #c9c9c9;
-        }
-        .td-listas--small{
-            font-size:0.7rem;
-            margin-right: 6px;
-            color:#797979;
-        }
+       
         `;
     } 
 

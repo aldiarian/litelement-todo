@@ -23,7 +23,10 @@ class TodoCheck extends LitElement {
     }
 
     render() {
-        return html `<div class="td-iconCheck">${this.activa ? this.checkedIcon : this.unCheckedIcon }</div>`;
+        return html `
+            <div class="td-iconCheck">
+            ${this.activa ? this.checkedIcon : this.unCheckedIcon }
+            </div>`;
     }
 
     get checkedIcon() {
