@@ -27,6 +27,12 @@ class TodoApp extends LitElement {
             list-style:none;
             padding:0;
         }
+        todo-element{
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
         `;
     }
     static get properties() {
@@ -66,11 +72,10 @@ class TodoApp extends LitElement {
                 ${this.lista.length > 0 ? html`
                     <ul >
                     ${ this.lista.map (elemento => html`
-                        <li>
-                            <todo-element
+                        <li> 
+                            <todo-element class="td-elemento" id="${elemento.id}"
                                 @inputChecked="${this.cambiarCheked}"
                                 ?activa=${elemento.activa}
-                                .newId=${elemento.id}
                                 .nombreItem=${elemento.nombre}>
                             </todo-element>
                         </li>`
@@ -106,12 +111,14 @@ class TodoApp extends LitElement {
 
     }
     cambiarCheked(evnt){
+        
         const valorActiva = this.lista.filter( element => {
             return element.id  == evnt.target.newId;
         });
-        valorActiva[0].activa = !valorActiva[0].activa;
-        this.grabarStorage();
-        this.cargarStorage();
+        console.log(valorActiva);
+        // valorActiva[0].activa = !valorActiva[0].activa;
+        // this.grabarStorage();
+        // this.cargarStorage();
     }
     crearId(){
         this.newId = new Date();
