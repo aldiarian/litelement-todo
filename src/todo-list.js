@@ -6,18 +6,19 @@ class TodoList extends LitElement {
         return {
             listAll: { type: Number },
             listPending: { type: Number },
-            listDone: { type: Number }
+            listDone: { type: Number },
+            elId: { type: Number }
         };
     }
     constructor() {
         super();
-        this.listAll  = 0,
-        this.listPending = 0,
-        this.listDone = 0
+        this.listAll = 0,
+            this.listPending = 0,
+            this.listDone = 0
     }
 
     static get styles() {
-        return css`
+        return css `
         :host{
             display:flex;
             justify-content: space-between;
@@ -42,18 +43,28 @@ class TodoList extends LitElement {
             color:#797979;
         }
         `;
-    } 
+    }
 
     render() {
-        return html`
-        <div class="td-listas">
-            <span class="td-listas--small">${this.listAll}</span>Ver todas</div>
-        <div class="td-listas">
-            <span class="td-listas--small">${this.listPending}</span>Pendientes</div>
-        <div class="td-listas">
-            <span class="td-listas--small">${this.listDone}</span>Terminadas</div>
+        return html `
+        <div class="td-listas" id="verTodas"  @click=${this.verFiltradas}>
+            <span  class="td-listas--small">${this.listAll}</span>Ver todas</div>
+        <div class="td-listas" id="verPending" @click=${this.verFiltradas}>
+            <span   class="td-listas--small">${this.listPending}</span>Pendientes</div>
+        <div class="td-listas" id="verDone"  @click=${this.verFiltradas}>
+            <span  class="td-listas--small">${this.listDone}</span>Terminadas</div>
         `;
     }
-    
+
+    verFiltradas(evento) {
+        console.log('verfiltradas', evento.target.id);
+        this.elId = evento.target.id;
+        this.dispatchEvent(new CustomEvent('filtrarLista', {
+            bubbles: true,
+            composed: true,
+            detail: this.elId
+        }));
+    }
+
 }
 customElements.define('todo-list', TodoList);

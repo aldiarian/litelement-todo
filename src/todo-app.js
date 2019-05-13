@@ -87,6 +87,7 @@ class TodoApp extends LitElement {
                     : null }
     
                     <todo-list
+                    @filtrarLista=${this.filtrarLista}
                         .listAll=${this.listAll}
                         .listPending=${this.listPending}
                         .listDone=${this.listDone} >
@@ -139,7 +140,7 @@ class TodoApp extends LitElement {
         updateLists(){
             this.listDone = 0;
             this.listPending = 0;
-            this.listAll = this.lista.length
+            this.listAll = this.lista.length;
             this.lista.forEach(element => {
                 element.activa ? this.listDone ++ : null;
             });
@@ -155,5 +156,20 @@ class TodoApp extends LitElement {
             this.updateLists();
             
         }
+
+        verTodas(){
+            console.log('vertodas');
+        }
+        verPending(){
+            console.log('ver pending');
+        }
+        verDone(){
+            console.log('ver done');
+        }
+        filtrarLista( evnt ){
+            console.log(' filtrar' ,evnt.detail);
+            
+        }
+
     }
     customElements.define('todo-app', TodoApp);
