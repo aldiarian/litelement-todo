@@ -12,7 +12,7 @@ class TodoElement extends LitElement {
     constructor() {
         super();
         this.nombreItem = 'muestra';
-        this.activa = false;
+        this.clicado = false;
     }
     static get styles() {
         return css `
@@ -20,7 +20,9 @@ class TodoElement extends LitElement {
            font-size:1rem;
            font-family: var(--font-primary);
         }
-        
+        .td-elemento{
+            cursor: pointer;
+        }
         `;
     }
 

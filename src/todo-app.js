@@ -27,35 +27,6 @@ class TodoApp extends LitElement {
             list-style:none;
             padding:0;
         }
-        .td-listas{
-            background-color: #e2e2e2;
-            text-align:center;
-            padding:0.5rem;
-            border-radius: 3px;
-            width:25%;
-            cursor:pointer;
-        }
-        .td-listas:hover{
-            background-color: #c9c9c9;
-        }
-        .td-listas--small{
-            font-size:0.7rem;
-            margin-right: 6px;
-            color:#797979;
-        }
-        .td-elemento{
-            cursor: pointer;
-            display: flex;
-        }
-        .td-edit__icon{
-            width:20px;
-            height:20px;
-            display: inline-block;
-        }
-        .td-edit__icon svg{
-            width:100%;
-            height:100%;
-        }
         `;
     }
     static get properties() {
@@ -67,7 +38,8 @@ class TodoApp extends LitElement {
             newId: { type: Date },
             listAll: { type: Number },
             listPending: { type: Number },
-            listDone: { type: Number }
+            listDone: { type: Number },
+            listStorage: { type: Array }
         };
     }
 
@@ -77,10 +49,10 @@ class TodoApp extends LitElement {
         this.listaEntrada = '';
         this.lista = [];
         this.crearId();
+        this.listStorage = []
+        this.listPending = 0;
+        this.listDone = 0;
         this.cargarStorage();
-        this.listAll  = this.lista.length,
-        this.listPending = 0,
-        this.listDone = 0
     }
 
     render() {
@@ -101,14 +73,6 @@ class TodoApp extends LitElement {
                                 .newId=${elemento.id}
                                 .nombreItem=${elemento.nombre}>
                             </todo-element>
-                            <div class="td-edit">
-                                <span class="td-edit__icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-                                </span>
-                                <span class="td-edit__icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-                                </span>
-                            </div>
                         </li>`
                         )
                     }
@@ -116,9 +80,9 @@ class TodoApp extends LitElement {
                 : null }
 
                 <todo-list
-                    listAll=${this.listAll}
-                    listPending=${this.listPending}
-                    listDone=${this.listDone} >
+                    .listAll=${this.listAll}
+                    .listPending=${this.listPending}
+                    .listDone=${this.listDone} >
                 </todo-list>
             `;
     }
@@ -129,6 +93,7 @@ class TodoApp extends LitElement {
             this.listaEntrada = evnt.target.value;
             this.agregarLista();
             evnt.target.value = '';
+            this.cargarStorage();
         }
 
     }
@@ -136,7 +101,7 @@ class TodoApp extends LitElement {
         if (this.listaEntrada.length > 0 ){
             this.lista.push({nombre : this.listaEntrada, activa: this.activa, id: this.crearId() } ) ;
         }
-        this.listAll = this.lista.length;
+        this.updateLists()
         this.grabarStorage();
 
     }
@@ -146,6 +111,7 @@ class TodoApp extends LitElement {
         });
         valorActiva[0].activa = !valorActiva[0].activa;
         this.grabarStorage();
+        this.cargarStorage();
     }
     crearId(){
         this.newId = new Date();
@@ -158,9 +124,19 @@ class TodoApp extends LitElement {
     cargarStorage(){
         if( localStorage.getItem('data')){
             this.lista = JSON.parse( localStorage.getItem('data'));
-            this.listAll = this.lista.length;
-            console.log(  this.listAll )
+            this.updateLists()
         }
+    }
+
+    
+    updateLists(){
+        this.listDone = 0;
+        this.listPending = 0;
+        this.listAll = this.lista.length
+        this.lista.forEach(element => {
+            element.activa ? this.listDone ++ : null;
+        });
+        this.listPending = this.listAll - this.listDone;
     }
 }
 customElements.define('todo-app', TodoApp);
