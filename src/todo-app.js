@@ -131,7 +131,7 @@ class TodoApp extends LitElement {
         cargarStorage(){
             if( localStorage.getItem('data')){
                 this.lista = JSON.parse( localStorage.getItem('data'));
-                this.updateLists()
+                this.updateLists();
             }
         }
     
@@ -147,7 +147,12 @@ class TodoApp extends LitElement {
         }
 
         borrarElement(evnt){
-            console.log('borro element', evnt.target);
+            console.log('borro element', evnt.target.id);
+            this.lista = this.lista.filter( element => {
+                return element.id != evnt.target.id;
+            });
+            this.grabarStorage();
+            this.updateLists();
             
         }
     }
