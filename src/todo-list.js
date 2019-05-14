@@ -58,11 +58,11 @@ class TodoList extends LitElement {
 
     verFiltradas(evento) {
         console.log('verfiltradas', evento.target.id);
-        this.elId = evento.target.id;
+        const elId = evento.target.id;
         this.dispatchEvent(new CustomEvent('filtrarLista', {
             bubbles: true,
             composed: true,
-            detail: this.elId
+            detail: elId
         }));
     }
 

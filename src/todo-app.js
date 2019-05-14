@@ -69,25 +69,25 @@ class TodoApp extends LitElement {
                         type="text"
                         placeholder="Introduce Item" >
     
-                    ${this.lista.length > 0 ? html`
+                        ${this.lista.length > 0 ? html`
                         <ul >
-                        ${ this.lista.map (elemento => html`
-                            <li>
-                                <todo-element id=${elemento.id}
-                                    @delete-element="${this.borrarElement}"
-                                    @inputChecked="${this.cambiarCheked}"
-                                    ?activa=${elemento.activa}
-                                    .newId=${elemento.id}
-                                    .nombreItem=${elemento.nombre}>
-                                </todo-element>
-                            </li>`
-                            )
-                        }
+                            ${ this.lista.map (elemento => html`
+                                <li>
+                                    <todo-element id=${elemento.id}
+                                        @delete-element="${this.borrarElement}"
+                                        @inputChecked="${this.cambiarCheked}"
+                                        ?activa=${elemento.activa}
+                                        .newId=${elemento.id}
+                                        .nombreItem=${elemento.nombre}>
+                                    </todo-element>
+                                </li>`
+                                )
+                            }
                         </ul>`
-                    : null }
+                        : null }
     
                     <todo-list
-                    @filtrarLista=${this.filtrarLista}
+                        @filtrarLista=${this.filtrarLista}
                         .listAll=${this.listAll}
                         .listPending=${this.listPending}
                         .listDone=${this.listDone} >
@@ -107,7 +107,15 @@ class TodoApp extends LitElement {
         }
         agregarLista(){
             if (this.listaEntrada.length > 0 ){
-                this.lista.push({nombre : this.listaEntrada, activa: this.activa, id: this.crearId() } ) ;
+                // this.lista.push({nombre : this.listaEntrada, activa: this.activa, id: this.crearId() } ) ;
+                this.lista = [
+                    ...this.lista,
+                    {   
+                        nombre : this.listaEntrada,
+                        activa: this.activa,
+                        id: this.crearId()
+                    } 
+                ]
             }
             this.updateLists()
             this.grabarStorage();
@@ -154,20 +162,12 @@ class TodoApp extends LitElement {
             });
             this.grabarStorage();
             this.updateLists();
-            
         }
 
-        verTodas(){
-            console.log('vertodas');
-        }
-        verPending(){
-            console.log('ver pending');
-        }
-        verDone(){
-            console.log('ver done');
-        }
         filtrarLista( evnt ){
-            console.log(' filtrar' ,evnt.detail);
+            if( evnt.detail == "verPending") {
+                console.log('verpendin');
+            }
             
         }
 
