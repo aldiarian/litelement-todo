@@ -7,7 +7,7 @@ class TodoList extends LitElement {
             listAll: { type: Number },
             listPending: { type: Number },
             listDone: { type: Number },
-            elId: { type: Number }
+            elId: { type: String }
         };
     }
     constructor() {
@@ -42,12 +42,15 @@ class TodoList extends LitElement {
             margin-right: 6px;
             color:#797979;
         }
+        .td-listas-active{
+            border:1px solid black;
+        }
         `;
     }
 
     render() {
         return html `
-        <div class="td-listas" id="verTodas"  @click=${this.verFiltradas}>
+        <div class="td-listas td-listas-active" id="verTodas"  @click=${this.verFiltradas}>
             <span  class="td-listas--small">${this.listAll}</span>Ver todas</div>
         <div class="td-listas" id="verPending" @click=${this.verFiltradas}>
             <span   class="td-listas--small">${this.listPending}</span>Pendientes</div>
@@ -57,13 +60,21 @@ class TodoList extends LitElement {
     }
 
     verFiltradas(evento) {
-        console.log('verfiltradas', evento.target.id);
+        this.changeActive(evento);
         this.elId = evento.target.id;
         this.dispatchEvent(new CustomEvent('filtrarLista', {
             bubbles: true,
             composed: true,
             detail: this.elId
         }));
+    }
+
+    changeActive(evento) {
+        const allList = this.shadowRoot.querySelectorAll('.td-listas');
+        allList.forEach(element => {
+            element.classList.remove('td-listas-active');
+        });
+        evento.target.classList.add('td-listas-active');
     }
 
 }

@@ -45,7 +45,8 @@ class TodoApp extends LitElement {
             listAll: { type: Number },
             listPending: { type: Number },
             listDone: { type: Number },
-            listStorage: { type: Array }
+            listStorage: { type: Array },
+            typeFilter: { type: String }
         };
     }
 
@@ -59,6 +60,7 @@ class TodoApp extends LitElement {
         this.listPending = 0;
         this.listDone = 0;
         this.cargarStorage();
+        this.typeFilter = 'verTodas';
     }
 
     render() {
@@ -71,7 +73,7 @@ class TodoApp extends LitElement {
     
                     ${this.lista.length > 0 ? html`
                         <ul >
-                        ${ this.lista.map (elemento => html`
+                        ${ this.doFilter(this.lista).map (elemento => html`
                             <li>
                                 <todo-element id=${elemento.id}
                                     @delete-element="${this.borrarElement}"
@@ -87,13 +89,29 @@ class TodoApp extends LitElement {
                     : null }
     
                     <todo-list
-                    @filtrarLista=${this.filtrarLista}
+                    @filtrarLista=${this.changeFilter}
                         .listAll=${this.listAll}
                         .listPending=${this.listPending}
                         .listDone=${this.listDone} >
                     </todo-list>
                 `;
         }
+
+        changeFilter(evento){
+            this.typeFilter = evento.detail;
+        }
+
+        doFilter( lista ){
+                if ( this.typeFilter == "verPending"){
+                    return this.lista.filter( item => item.activa == false );
+                } 
+                if ( this.typeFilter == "verDone"){
+                    return this.lista.filter( item => item.activa == true );
+                } else {
+                    return lista;
+                } 
+        }
+        
         entradaItem(evnt) {
             let keycode = evnt.keyCode;
             
@@ -109,7 +127,7 @@ class TodoApp extends LitElement {
             if (this.listaEntrada.length > 0 ){
                 this.lista.push({nombre : this.listaEntrada, activa: this.activa, id: this.crearId() } ) ;
             }
-            this.updateLists()
+            this.updateLists();
             this.grabarStorage();
     
         }
